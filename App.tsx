@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { generateSpaceContent } from './services/geminiService';
 import { ContentMode, HistoryItem, ContentResponse, TacticalSection } from './types';
 import Starfield from './components/Starfield';
+import GalaxyMap from './components/GalaxyMap';
 
 // --- TACTICAL SOUND ENGINE ---
 const useSoundEngine = () => {
@@ -205,6 +205,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [currentResult, setCurrentResult] = useState<ContentResponse | null>(null);
+  const [showMap, setShowMap] = useState(false); // PATCH: Added view state for Galaxy Map
   
   const { playHover, playClick, createSyncHum } = useSoundEngine();
   const activeHum = useRef<{ stop: () => void } | null>(null);
@@ -231,6 +232,7 @@ const App: React.FC = () => {
     playClick();
     setLoading(true);
     setCurrentResult(null);
+    setShowMap(false); // Close map if open
     try {
       const result = await generateSpaceContent(t, ContentMode.FACTS);
       setCurrentResult(result);
@@ -258,7 +260,11 @@ const App: React.FC = () => {
       {/* Top Navigation */}
       <div className="flex justify-between items-center mb-12 px-4">
         <div className="flex items-center gap-4">
-            <div onMouseEnter={playHover} onClick={playClick} className="w-14 h-14 bg-cyan-950/40 backdrop-blur-lg rounded-xl flex items-center justify-center border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.2)] group hover:border-cyan-400 transition-all cursor-pointer">
+            <div 
+              onMouseEnter={playHover} 
+              onClick={() => { playClick(); setShowMap(false); setCurrentResult(null); }} 
+              className="w-14 h-14 bg-cyan-950/40 backdrop-blur-lg rounded-xl flex items-center justify-center border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.2)] group hover:border-cyan-400 transition-all cursor-pointer"
+            >
                 <RocketOutline />
             </div>
             <div className="flex flex-col">
@@ -267,7 +273,14 @@ const App: React.FC = () => {
             </div>
         </div>
         <div className="flex gap-8 text-[10px] mono text-slate-400 font-bold uppercase tracking-widest items-center">
-            <button onMouseEnter={playHover} onClick={playClick} className="bg-cyan-500/10 text-cyan-400 px-6 py-2 rounded-full border border-cyan-500/30 hover:bg-cyan-500/20 transition-all shadow-[0_0_15px_rgba(6,182,212,0.1)] uppercase tracking-widest">Mission Databases</button>
+            {/* PATCH: Mission Databases now toggles the GalaxyMap component */}
+            <button 
+              onMouseEnter={playHover} 
+              onClick={() => { playClick(); setShowMap(!showMap); }} 
+              className={`px-6 py-2 rounded-full border transition-all uppercase tracking-widest ${showMap ? 'bg-cyan-500 text-black border-cyan-400 shadow-[0_0_25px_rgba(6,182,212,0.5)]' : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]'}`}
+            >
+              {showMap ? '[ CLOSE_MAP ]' : 'Mission Databases'}
+            </button>
             <button onMouseEnter={playHover} onClick={playClick} className="text-xl hover:rotate-90 transition-transform duration-500 text-cyan-500/50 hover:text-cyan-400">⚙️</button>
         </div>
       </div>
@@ -304,6 +317,22 @@ const App: React.FC = () => {
                 <div className="h-full flex flex-col items-center justify-center space-y-6">
                     <div className="w-20 h-20 border-4 border-cyan-500/10 border-t-cyan-500 rounded-full animate-spin"></div>
                     <div className="mono text-cyan-400 animate-pulse tracking-widest text-sm font-bold">SYNCHRONIZING WITH DEEP SPACE NODES...</div>
+                </div>
+            ) : showMap ? (
+                /* PATCH: Display the GalaxyMap when the view state is active */
+                <div className="animate-in fade-in zoom-in-95 duration-500 h-full">
+                  <GalaxyMap onSelect={(lm) => {
+                    setTopic(lm.name);
+                    handleSearch(lm.name);
+                  }} />
+                  <div className="mt-6 flex justify-center">
+                    <button 
+                      onClick={() => setShowMap(false)}
+                      className="mono text-[10px] text-cyan-500 hover:text-white transition-colors tracking-widest border border-cyan-500/20 px-8 py-3 rounded-lg hover:bg-cyan-500/10 font-bold uppercase"
+                    >
+                      [ RETURN_TO_DASHBOARD ]
+                    </button>
+                  </div>
                 </div>
             ) : currentResult ? (
                 <div className="cosmic-card brackets p-10 animate-in zoom-in-95 duration-500 min-h-[500px] flex flex-col relative overflow-hidden">
@@ -396,7 +425,7 @@ const App: React.FC = () => {
                         <div 
                           key={h.id} 
                           onMouseEnter={playHover}
-                          onClick={() => { playClick(); setCurrentResult(h.content); setTopic(h.topic); }}
+                          onClick={() => { playClick(); setShowMap(false); setCurrentResult(h.content); setTopic(h.topic); }}
                           className="flex items-center gap-4 p-4 hover:bg-white/5 rounded-xl cursor-pointer transition-all border border-transparent hover:border-cyan-500/20 group"
                         >
                             <div className="w-2 h-2 rounded-full bg-cyan-500 group-hover:scale-150 group-hover:shadow-[0_0_10px_#06b6d4] transition-all"></div>

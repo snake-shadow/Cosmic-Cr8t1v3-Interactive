@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Lens | Interactive Explorer</title>
+    <title>Cosmic Cr8t1v3 | Tactical Explorer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
@@ -120,10 +119,10 @@
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+    "react": "https://esm.sh/react@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
@@ -132,5 +131,7 @@
     <div class="nebula-container"></div>
     <div class="nebula-mist"></div>
     <div id="root"></div>
+    <!-- PATCH: Linked the main module for Vite build compatibility -->
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

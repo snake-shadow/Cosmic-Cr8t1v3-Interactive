@@ -1,9 +1,12 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentMode, ContentResponse } from "../types";
 
-// The API_KEY is sourced from environment variables (e.g., Render Environment Settings)
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+/**
+ * PATCH: In Vite environments, environment variables are accessed via import.meta.env.
+ * We look for VITE_API_KEY (Vite standard) first, then fallback to process.env.API_KEY.
+ */
+const apiKey = (import.meta as any).env?.VITE_API_KEY || (process as any).env?.API_KEY || '';
+const ai = new GoogleGenAI({ apiKey });
 
 const SYSTEM_INSTRUCTION = `You are the Cosmic Lens Tactical Engine.
 Your directive is to provide structured, high-impact data on celestial phenomena.
@@ -23,6 +26,10 @@ export async function generateSpaceContent(
   topic: string, 
   mode: ContentMode
 ): Promise<ContentResponse> {
+  if (!apiKey) {
+    console.error("MISSION ABORT: API_KEY not detected in telemetry stream.");
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
