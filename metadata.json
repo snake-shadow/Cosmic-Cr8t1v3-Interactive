@@ -1,0 +1,8 @@
+{
+  "name": "Cosmic Cr8t1v3",
+  "description": "A high-impact space content engine that translates complex astrophysical data into viral-ready scripts and creative plans for space enthusiasts and creators.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

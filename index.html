@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Lens | Interactive Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #06b6d4;
+            --neon-purple: #a855f7;
+            --abyss: #020617;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--abyss);
+            color: #f8fafc;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+        }
+        .mono { font-family: 'Share Tech Mono', monospace; }
+        
+        /* High-Performance Nebula Background */
+        .nebula-container {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(126, 34, 206, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #0f172a 0%, var(--abyss) 100%);
+        }
+
+        .nebula-mist {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            mix-blend-mode: color-dodge;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* The 3x3 Card Grid Brackets */
+        .cosmic-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            border-radius: 14px;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+        }
+        
+        .cosmic-card:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.15);
+        }
+
+        .brackets::before, .brackets::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: var(--neon-cyan);
+            border-style: solid;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .brackets::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-top-left-radius: 12px; }
+        .brackets::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-bottom-right-radius: 12px; }
+
+        .search-pill {
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.2);
+            border-radius: 999px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .search-pill:focus-within {
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.4);
+            border-color: #22d3ee;
+        }
+
+        .glow-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.8); }
+        .glow-purple { text-shadow: 0 0 10px rgba(168, 85, 247, 0.8); }
+
+        /* Holographic Shimmer Effect */
+        @keyframes holographic {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .holographic-text {
+            background: linear-gradient(
+                90deg, 
+                #22d3ee, 
+                #a855f7, 
+                #22d3ee, 
+                #ffffff, 
+                #22d3ee
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: holographic 8s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.3));
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.3); border-radius: 10px; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+  }
+}
+</script>
+</head>
+<body>
+    <div class="nebula-container"></div>
+    <div class="nebula-mist"></div>
+    <div id="root"></div>
+</body>
+</html>
