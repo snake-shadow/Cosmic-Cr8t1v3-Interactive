@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentMode, ContentResponse } from "../types";
 
-// Strictly follow system instructions for API key and initialization
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `You are the Cosmic Lens Tactical Engine.
@@ -25,11 +24,11 @@ export async function generateSpaceContent(
 ): Promise<ContentResponse> {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview", // Upgraded to Pro for superior STEM reasoning
-      contents: `Subject: ${topic}. Focus on technical and awe-inspiring data. Provide specific technical details and verifiable facts.`,
+      model: "gemini-3-flash-preview", 
+      contents: `Subject: ${topic}. Focus on technical and awe-inspiring data.`,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        // Removed googleSearch tool to guarantee strict JSON output format as per system rules
+        tools: [{googleSearch: {}}],
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -61,7 +60,7 @@ export async function generateSpaceContent(
           },
           required: ['hook', 'sections', 'sources']
         },
-        temperature: 0.7,
+        temperature: 1,
       },
     });
 
