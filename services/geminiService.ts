@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentMode, ContentResponse } from "../types";
 
@@ -5,14 +6,8 @@ export async function generateSpaceContent(
   topic: string, 
   mode: ContentMode
 ): Promise<ContentResponse> {
-  // Vite uses import.meta.env for variables prefixed with VITE_
-  const apiKey = (import.meta as any).env?.VITE_API_KEY || (process.env as any).API_KEY;
-  
-  if (!apiKey) {
-    throw new Error("MISSING_UPLINK_KEY: Configure VITE_API_KEY in environment.");
-  }
-
-  const ai = new GoogleGenAI({ apiKey });
+  // Initialized using process.env.API_KEY which is injected by Vite during the build process
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
   
   const SYSTEM_INSTRUCTION = `You are the COSMIC CR8T1V3 Deep-Space Tactical Bridge Processor.
 Your mission is to provide structured reconnaissance data on celestial targets.
@@ -24,8 +19,9 @@ RECONNAISSANCE PROTOCOLS:
 - HUMAN SCALE LORE: Translate space numbers into things humans understand (size, speed, distance, age comparisons).`;
 
   try {
+    // Upgrading to gemini-3-pro-preview as this is a complex reasoning/STEM task
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview", 
+      model: "gemini-3-pro-preview", 
       contents: `INITIATE DEEP RECON: ${topic}. Synchronize with stellar databases.`,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -63,9 +59,11 @@ RECONNAISSANCE PROTOCOLS:
       },
     });
 
+    // Access text property directly as per latest SDK guidelines
     const rawText = response.text || "{}";
     const parsedData = JSON.parse(rawText);
     
+    // Extract website URLs from grounding chunks as mandated by Google Search grounding guidelines
     const groundingSources = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.map(chunk => ({
       title: chunk.web?.title || "Orbital Node",
       url: chunk.web?.uri || "#"
