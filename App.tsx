@@ -1,4 +1,4 @@
-// COSMIC CR8T1V3 - TACTICAL BRIDGE v4.9.7 - REFINED COSMETICS
+// COSMIC CR8T1V3 - TACTICAL BRIDGE v4.9.8 - REFINED COSMETICS
 import React, { useState, useEffect, useRef } from 'react';
 import { generateSpaceContent } from './services/geminiService';
 import { ContentMode, HistoryItem, ContentResponse } from './types';
@@ -44,7 +44,7 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [currentResult, setCurrentResult] = useState<ContentResponse | null>(null);
-  const [systemLogs, setSystemLogs] = useState<string[]>(['SYSTEM_BOOT_COMPLETE', 'UPLINK_READY', 'RECON_CATALOG_LOADED_v4.9.7']);
+  const [systemLogs, setSystemLogs] = useState<string[]>(['SYSTEM_BOOT_COMPLETE', 'UPLINK_READY', 'RECON_CATALOG_LOADED_v4.9.8']);
   
   const mainScrollRef = useRef<HTMLDivElement>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -217,17 +217,23 @@ const App: React.FC = () => {
                 alt="COSMIC Logo" 
                 className="w-10 h-10 relative z-10 logo-glow" 
                 onError={(e) => {
-                    // Fallback to custom astronaut SVG if png file is missing
+                    // Fallback to sophisticated blue glass astronaut helmet SVG
                     (e.target as any).style.display = 'none';
                     (e.target as any).nextSibling.style.display = 'block';
                 }}
             />
-            {/* Fallback Astronaut Helmet SVG with Blue Glass effect */}
-            <svg style={{display: 'none'}} className="w-10 h-10 relative z-10 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2a10 10 0 0 0-10 10v3a2 2 0 0 0 2 2h1v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3h1a2 2 0 0 0 2-2v-3a10 10 0 0 0-10-10z" fill="rgba(34,211,238,0.1)"/>
-              <path d="M7 11h10a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2z" fill="rgba(34,211,238,0.3)"/>
-              <circle cx="12" cy="11" r="1" fill="currentColor"/>
-              <path d="M9 17v4m6-4v4"/>
+            {/* Sophisticated Blue Glass Astronaut Helmet SVG */}
+            <svg style={{display: 'none'}} className="w-10 h-10 relative z-10 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] logo-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+              {/* Outer Helmet Outline */}
+              <path d="M12 2C7.58 2 4 5.58 4 10V14C4 15.1 4.9 16 6 16H18C19.1 16 20 15.1 20 14V10C20 5.58 16.42 2 12 2Z" fill="rgba(34,211,238,0.05)"/>
+              {/* Visor Area (Blue Glass Effect) */}
+              <path d="M6 9C6 7.34 7.34 6 9 6H15C16.66 6 18 7.34 18 9V12C18 13.66 16.66 15 15 15H9C7.34 15 6 13.66 6 12V9Z" fill="rgba(34,211,238,0.3)" stroke="rgba(34,211,238,0.6)" strokeWidth="0.5"/>
+              {/* Internal detail */}
+              <path d="M10 12L14 12" stroke="rgba(34,211,238,0.5)" strokeWidth="2" strokeLinecap="round"/>
+              {/* Breathing filters */}
+              <circle cx="8" cy="18" r="1.5" stroke="currentColor" fill="rgba(34,211,238,0.1)"/>
+              <circle cx="16" cy="18" r="1.5" stroke="currentColor" fill="rgba(34,211,238,0.1)"/>
+              <path d="M12 16L12 19" stroke="currentColor"/>
             </svg>
           </div>
           <div className="flex flex-col">
@@ -286,7 +292,7 @@ const App: React.FC = () => {
                       <h3 className="text-xl font-bold text-white michroma uppercase glow-cyan leading-tight">{card.title}</h3>
                       <p className="text-[9px] text-cyan-400/50 uppercase tracking-[0.4em] mono mt-1 font-bold">{card.sub}</p>
                     </div>
-                    {/* Fixed arrow button to match Search Trigger style */}
+                    {/* Fixed action button: Matching search trigger aesthetics (circular, neon cyan, glow) */}
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-white/10 border border-white/5 group-hover:bg-[#22d3ee] group-hover:text-black group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all duration-300">
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                     </div>
