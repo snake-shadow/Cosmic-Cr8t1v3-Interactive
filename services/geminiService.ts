@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentMode, ContentResponse } from "../types";
 
@@ -5,8 +6,10 @@ export async function generateSpaceContent(
   topic: string, 
   mode: ContentMode
 ): Promise<ContentResponse> {
-  // Use a new instance to ensure we pick up any environment changes
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Use Vite's environment variable convention (VITE_API_KEY) or fallback to process.env
+  const apiKey = (import.meta as any).env?.VITE_API_KEY || process.env.API_KEY;
+  
+  const ai = new GoogleGenAI({ apiKey });
   
   const SYSTEM_INSTRUCTION = `You are the COSMIC CR8T1V3 Deep-Space Tactical Bridge Processor.
 Your mission is to provide structured reconnaissance data on celestial targets.
