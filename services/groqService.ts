@@ -27,7 +27,7 @@ Respond as valid JSON matching this schema exactly:`;
         { role: "system", content: SYSTEM_INSTRUCTION },
         { role: "user", content: `INITIATE DEEP RECON: ${topic}. Synchronize with stellar databases.` }
       ],
-      model: "llama3-70b-8192",
+      model: "llama-3.3-70b-versatile",
       temperature: 0.1,
       max_tokens: 1500,
       response_format: { type: "json_object" }
