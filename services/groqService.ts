@@ -19,9 +19,12 @@ RECONNAISSANCE PROTOCOLS:
 - sections: Provide exactly 5 sections: TELEMETRY, ANALYSIS, ANOMALIES, ENVIRONMENTAL DATA, and HUMAN SCALE LORE.
 - HUMAN SCALE LORE: Translate space numbers into things humans understand (size, speed, distance, age comparisons).
 
-Respond as valid JSON matching this schema exactly:`;
+Respond as valid JSON matching this schema exactly:
+{"hook":"...", "sections":[{"title":"...", "type":"...", "content":["..."]}], "sources":[{"title":"...", "url":"..."}]}`;
 
   try {
+    console.log('🚀 Calling Groq API for:', topic);
+    
     const completion = await groq.chat.completions.create({
       messages: [
         { role: "system", content: SYSTEM_INSTRUCTION },
@@ -34,7 +37,10 @@ Respond as valid JSON matching this schema exactly:`;
     });
 
     const rawText = completion.choices[0]?.message?.content || "{}";
+    console.log('📡 Raw Groq response:', rawText);
+    
     const parsedData = JSON.parse(rawText);
+    console.log('✅ Parsed data:', parsedData);
 
     return {
       hook: parsedData.hook || "SIGNAL_ACQUIRED",
@@ -42,6 +48,7 @@ Respond as valid JSON matching this schema exactly:`;
       sources: parsedData.sources || []
     };
   } catch (error: any) {
+    console.error('❌ Groq error:', error);
     if (error.message?.includes('quota')) {
       throw new Error("QUOTA_EXHAUSTED: Please wait a moment for the uplink to cool down or check your API billing.");
     }
