@@ -1,10 +1,8 @@
 import Groq from "groq-sdk";
-import { ContentMode, ContentResponse } from "./types";
+import { ContentMode, ContentResponse } from "../types";
 
 const groq = new Groq({ 
-// Right:
-apiKey: (import.meta.env.VITE_GROQ_API_KEY || '') as string
-
+  apiKey: (import.meta.env.VITE_GROQ_API_KEY || '') as string
 });
 
 export async function generateSpaceContent(
@@ -28,7 +26,7 @@ Respond as valid JSON matching this schema exactly:`;
         { role: "system", content: SYSTEM_INSTRUCTION },
         { role: "user", content: `INITIATE DEEP RECON: ${topic}. Synchronize with stellar databases.` }
       ],
-      model: "llama3-70b-8192",  // Groq's fast cosmic model
+      model: "llama3-70b-8192",
       temperature: 0.1,
       max_tokens: 1500,
       response_format: { type: "json_object" }
