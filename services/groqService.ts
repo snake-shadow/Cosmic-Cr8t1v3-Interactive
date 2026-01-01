@@ -10,49 +10,17 @@ export async function generateSpaceContent(
   topic: string,
   _mode: ContentMode
 ): Promise<ContentResponse> {
-  const SYSTEM_INSTRUCTION = `You are a scientific space data analyst providing factual astronomical information.
+  const SYSTEM_INSTRUCTION = `You are the COSMIC CR8T1V3 Deep-Space Tactical Bridge Processor.
+Your mission is to provide structured reconnaissance data on celestial targets.
+TONE: High-fidelity, scientific, epic, precise.
 
-CRITICAL ACCURACY REQUIREMENTS:
-- Use ONLY verified scientific data from NASA, ESA, peer-reviewed sources
-- Include actual measurements with units (km, AU, light-years, solar masses, etc.)
-- Cite real missions, telescopes, discoveries with dates
-- If uncertain, state "estimated" or "approximately"
-- Never invent data - use "data unavailable" if unknown
+RECONNAISSANCE PROTOCOLS:
+- hook: A CINEMATIC HEADLINE IN ALL CAPS (MAX 6 WORDS)
+- sections: Provide exactly 5 sections: TELEMETRY, ANALYSIS, ANOMALIES, ENVIRONMENTAL DATA, and HUMAN SCALE LORE.
+- HUMAN SCALE LORE: Translate space numbers into things humans understand (size, speed, distance, age comparisons).
 
-OUTPUT FORMAT (valid JSON):
-{
-  "hook": "BRIEF FACTUAL HEADLINE (ALL CAPS, MAX 6 WORDS)",
-  "sections": [
-    {
-      "title": "TELEMETRY",
-      "type": "telemetry",
-      "content": ["Precise measurements: distance, size, mass, temperature, composition with sources"]
-    },
-    {
-      "title": "ANALYSIS", 
-      "type": "analysis",
-      "content": ["Scientific classification, formation theory, current state based on observations"]
-    },
-    {
-      "title": "ANOMALIES",
-      "type": "anomaly", 
-      "content": ["Unusual features, unexplained phenomena, ongoing research questions"]
-    },
-    {
-      "title": "ENVIRONMENTAL DATA",
-      "type": "telemetry",
-      "content": ["Conditions, radiation, magnetic fields, atmospheric data if applicable"]
-    },
-    {
-      "title": "HUMAN SCALE LORE",
-      "type": "lore",
-      "content": ["Real-world comparisons using everyday objects/distances, historical observations, cultural significance"]
-    }
-  ],
-  "sources": [
-    {"title": "Source name (NASA, etc.)", "url": "actual URL or 'Primary literature'"}
-  ]
-}`;
+Respond as valid JSON matching this schema exactly:
+{"hook":"...", "sections":[{"title":"...", "type":"...", "content":["..."]}], "sources":[{"title":"...", "url":"..."}]}`;
 
   try {
     console.log('🚀 Calling Groq API for:', topic);
@@ -60,11 +28,11 @@ OUTPUT FORMAT (valid JSON):
     const completion = await groq.chat.completions.create({
       messages: [
         { role: "system", content: SYSTEM_INSTRUCTION },
-        { role: "user", content: `Provide scientifically accurate data about: ${topic}. Include real measurements, missions, and sources. Use SI units and cite discoveries.` }
+        { role: "user", content: `INITIATE DEEP RECON: ${topic}. Synchronize with stellar databases.` }
       ],
       model: "llama-3.3-70b-versatile",
-      temperature: 0.05,
-      max_tokens: 2000,
+      temperature: 0.1,
+      max_tokens: 1500,
       response_format: { type: "json_object" }
     });
 
