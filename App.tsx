@@ -1,6 +1,7 @@
 // COSMIC CR8T1V3 - TACTICAL BRIDGE v4.9.8 - REFINED COSMETICS
 import React, { useState, useEffect, useRef } from 'react';
 import { generateSpaceContent } from './services/groqService';
+import { searchWikipedia } from './services/wikipediaService';
 import { ContentMode, HistoryItem, ContentResponse } from './types';
 
 declare global {
@@ -170,7 +171,41 @@ const App: React.FC = () => {
     startTransmissionSound();
     
     try {
-      const result = await generateSpaceContent(query, ContentMode.FACTS);
+      // Search Wikipedia first for real facts
+      const wikiData = await searchWikipedia(query);
+
+      let result;
+
+      if (wikiData) {
+        console.log('📚 Using Wikipedia data for:', query);
+        
+        // Pass Wikipedia facts to Groq for formatting
+        const enhancedQuery = `Topic: ${query}
+
+VERIFIED DATA FROM WIKIPEDIA:
+Title: ${wikiData.title}
+
+${wikiData.extract}
+
+Source: ${wikiData.url}
+
+Format this Wikipedia data into the standard 5-section structure.`;
+        
+        result = await generateSpaceContent(enhancedQuery, ContentMode.FACTS);
+        
+        // Ensure Wikipedia is in sources with correct URL
+        const hasWikiSource = result.sources.some(s => s.url === wikiData.url);
+        if (!hasWikiSource) {
+          result.sources.unshift({
+            title: `Wikipedia: ${wikiData.title}`,
+            url: wikiData.url
+          });
+        }
+      } else {
+        console.log('⚠️ No Wikipedia data, using pure Groq');
+        result = await generateSpaceContent(query, ContentMode.FACTS);
+      }
+
       setCurrentResult(result);
       playSFX('beep');
       addLog(`DATA_SYNC: ${query.toUpperCase()} ACQUIRED`);
